@@ -44,9 +44,6 @@ names(alldistricts_wide)
 
 #percentage calculations ####
 
-# tricky, since demo groups differ in columns
-# so doing individually for each demographic grouping
-
 #in the B census table bachelors and grad students must be summed for total of bachelor's or higher
 alldistricts_wide$pct.ed.collegegrad <- round_half_up((alldistricts_wide$education.bachelors+alldistricts_wide$education.gradprofess)/alldistricts_wide$education.total*100, 3)
 
