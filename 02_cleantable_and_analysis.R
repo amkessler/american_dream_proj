@@ -51,9 +51,11 @@ alldistricts_wide$pct.mortgage40plus <- round_half_up((alldistricts_wide$mortgag
 alldistricts_wide$pct.mortgage50plus <- round_half_up(alldistricts_wide$mortgage.50pctplus/alldistricts_wide$mortgage.total*100, 3)
 
 
+write_csv(alldistricts_wide, "counties1.csv")
+
 ### ANALYZING THE VARIABLES ####
 
-# mortgages .................
+# mortgages ............
 
 mortgages <- alldistricts_wide %>% 
   select(GEOID, state.name, county.name, mortgage.total, mortgage.40to49pct, mortgage.50pctplus,
