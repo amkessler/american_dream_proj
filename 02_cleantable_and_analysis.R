@@ -44,42 +44,40 @@ names(alldistricts_wide)
 
 #percentage calculations ####
 
-#-- tricky, since demo groups differ in columns
-#-- this might have to be done individually for each demographic grouping
-alldistricts_wide$pct.born.foreign <- round_half_up(alldistricts_wide$natborn.foreign/alldistricts_wide$natborn.total*100, 3)
+# tricky, since demo groups differ in columns
+# so doing individually for each demographic grouping
 
-alldistricts_wide$pct.mil.veteran <- round_half_up(alldistricts_wide$military.veteran/alldistricts_wide$military.total*100, 3)
+#in the B census table bachelors and grad students must be summed for total of bachelor's or higher
+alldistricts_wide$pct.ed.collegegrad <- round_half_up((alldistricts_wide$education.bachelors+alldistricts_wide$education.gradprofess)/alldistricts_wide$education.total*100, 3)
 
-alldistricts_wide$pct.race.white <- round_half_up(alldistricts_wide$originrace.whitealone/alldistricts_wide$originrace.total.all*100, 3)
-alldistricts_wide$pct.race.nonwhite <- 100-alldistricts_wide$pct.race.white 
-alldistricts_wide$pct.race.white <- NULL
+alldistricts_wide$pct.mortgage40plus <- round_half_up((alldistricts_wide$mortgage.40to49pct+alldistricts_wide$mortgage.50pctplus)/alldistricts_wide$mortgage.total*100, 3)
+alldistricts_wide$pct.mortgage50plus <- round_half_up(alldistricts_wide$mortgage.50pctplus/alldistricts_wide$mortgage.total*100, 3)
 
-#this has been fixed to account for grad student in the B census table
-alldistricts_wide$pct.ed.college.all <- round_half_up((alldistricts_wide$education.bachelors+alldistricts_wide$education.gradprofess)/alldistricts_wide$education.total*100, 3)
 
-alldistricts_wide$pct.ed.college.white <- round_half_up((alldistricts_wide$white.ed.male.bachelors+alldistricts_wide$white.ed.female.bachelors)/alldistricts_wide$white.ed.totalall*100, 3)
+### ANALYZING THE VARIABLES ####
 
-alldistricts_wide$pct.ed.college.white.male <- round_half_up(alldistricts_wide$white.ed.male.bachelors/alldistricts_wide$white.ed.male.total*100, 3)
+# mortgages .................
 
-alldistricts_wide$pct.ed.college.white.female <- round_half_up(alldistricts_wide$white.ed.female.bachelors/alldistricts_wide$white.ed.female.total*100, 3)
+mortgages <- alldistricts_wide %>% 
+  select(GEOID, state.name, county.name, mortgage.total, mortgage.40to49pct, mortgage.50pctplus,
+         pct.mortgage40plus, pct.mortgage50plus) 
+
+mortgages %>% 
+  filter(mortgage.total > 1000) %>% 
+  arrange(desc(pct.mortgage50plus)) %>% 
+  head(100) %>% 
+  View()
+  
+
+
+
 
 #remove unneeded columns
-alldistricts_wide <- alldistricts_wide %>% 
-  select(-natborn.total,
-         -natborn.foreign,           
-         -education.total,
-         -education.bachelors, 
-         -education.gradprofess,
-         -military.total,
-         -military.veteran,
-         -originrace.total.all,
-         -originrace.whitealone,
-         -white.ed.totalall,
-         -white.ed.male.total,
-         -white.ed.male.bachelors,
-         -white.ed.female.total,
-         -white.ed.female.bachelors
-)
+# alldistricts_wide <- alldistricts_wide %>% 
+#   select(-natborn.total
+# )
+
+
 
 
 ### NATIONAL-LEVEL FIGURES FOR COMPARISON ####
@@ -121,20 +119,7 @@ national$pct.ed.college.white.female <- round_half_up(national$white.ed.female.b
 
 #remove unneeded columns
 national <- national %>% 
-  select(-natborn.total,
-         -natborn.foreign,           
-         -education.total,
-         -education.bachelors,    
-         -education.gradprofess,
-         -military.total,
-         -military.veteran,
-         -originrace.total.all,
-         -originrace.whitealone,
-         -white.ed.totalall,
-         -white.ed.male.total,
-         -white.ed.male.bachelors,
-         -white.ed.female.total,
-         -white.ed.female.bachelors
+  select(-natborn.total
   )
 
 colnames(national)
